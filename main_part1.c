@@ -63,8 +63,7 @@ int cascade(int board[][6], int stacks[], int current, int numCandies);
 void initGameBoard(int board[H][W], int board_sample[][W]) {
   for(int i=0;i<H ;i++){
     for (int j=0;j<W;j++){
-      board[i][j]=board_sample[i][j];
-      
+      board[i][j]=candies[board_sample[i][j]];
     }
   }
 }
@@ -90,13 +89,11 @@ int initGameBoardFromFile(int board[][W], int stacks[]) {
  */
 void printGameBoard(int board[][W]) {
   printf("=====\n");
-  printf("New Round:\n");
-  printf("=====\n");
   printf(" | 0 | 1 | 2 | 3 | 4 | 5 |\n");
   for(int i=0;i<H ;i++){
     printf("%d",i);
     for (int j=0;j<W;j++){
-      printf("| %c ",candies[board[i][j]]);
+      printf("| %c ",board[i][j]);
     }
     printf("|\n");
   }
@@ -120,31 +117,32 @@ int askForSwap(int board[][W]) {
     printf("Coordinates Out of Bound.\n");
     return 0;
   }
-  if(candies[board[y][x]]==' '){
-    printf("Empty Cell Selected.\n");
-    return 0;
-  }
   printf("Enter the direction to swap (U for Up, D for Down, L for Left, R for Right):");
   scanf("%c",&dir);
   if (dir!='U'&&dir!='D'&&dir!='L'&&dir!='R'){
     printf("Wrong Direction Input.\n");
     return 0;
   }
-  if(dir=='U'&&(y-1)<0){
+  int newx=x,newy=y;
+  if (dir=='U'){
+    newy++;
+  }
+  else if (dir=='D'){
+    newy--;
+  }
+  else if (dir=='L'){
+    newx--;
+  }
+  else if (dir=='R'){
+    newx++;
+  }
+  if(dir=='U'&&(newy)<0||dir=='D'&&(newy)>=H||dir=='L'&&(newx)<0||dir=='R'&&(newx)>=W){
     printf("Move Out of Bound.");
     return 0;
   }
-  else if(dir=='D'&&(y+1)>H){
-    printf("Move Out of Bound.");
+  swap(board,y,x,newy,newx);
+  if (!(findAndRemoveMatch(board,y,x)||findAndRemoveMatch(board,y,x))){
     return 0;
-  }
-  else if(dir=='L'&&(x-1)<0){
-    printf("Move Out of Bound.");
-    return 0;
-  }
-  else if(dir=='R'&&(x+1)>W){
-      printf("Move Out of Bound.");
-      return 0;
   }
   return 1;
 }
@@ -160,9 +158,13 @@ int askForSwap(int board[][W]) {
  * @param col2 The column number of the destination cell
  */
 void swap(int board[][6], int row1, int col1, int row2, int col2) {
-
-
-
+  if(candies[board[row2][col2]]==' ') {
+    printf("Wrong Direction Input.\n");
+    return 0;
+  }
+  int temp= board[row1][col1];
+  board[row1][col1]=board[row2][col2];
+  board[row2][col2]=temp;
 }
 
 /**
@@ -310,8 +312,12 @@ int main(void) {
   initGameBoard(board,board_sample);
   int i=1;
   while(i--){
+    printf("=====\nNew Round:");
     printGameBoard(board);
-    askForSwap(board);
+    if (askForSwap(board)){
+      break;
+    }
+   
   }
  return 0;
 }
