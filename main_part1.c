@@ -31,7 +31,6 @@
 /* Given Global Variables and Definition */
 #define H 6  // height
 #define W 6  // width
-
 char candies[] = {'*', '#', '@', '%'};
 /* NO other global variables are allowed */
 /****************************************/
@@ -238,8 +237,8 @@ int isGameOver(int board[][W]) {
 int isMatching(int board[6][6], int row, int col) {
   if(board[row][col]!=' '){
     int nwrow=row+1,nwcol=col;
-    swap(board,row,col,nwrow,nwcol);
     if(board[nwrow][nwcol]!=' '&&(nwrow>=0 &&nwrow<H)&&(nwcol>=0 &&nwcol<W)){
+      swap(board,row,col,nwrow,nwcol);
       for (int i=nwcol-2;i<=nwcol;i++){
         if(i >= 0 && i + 2 < W){
           if(board[nwrow][i]==board[nwrow][i+1]&&board[nwrow][i]==board[nwrow][i+2]){
@@ -261,8 +260,8 @@ int isMatching(int board[6][6], int row, int col) {
     }
     swap(board,nwrow,nwcol,row,col);
     nwrow=row-1,nwcol=col;
-    swap(board,row,col,nwrow,nwcol);
     if(board[nwrow][nwcol]!=' '&&(nwrow>=0 &&nwrow<H)&&(nwcol>=0 &&nwcol<W)){
+      swap(board,row,col,nwrow,nwcol);
       for (int i=nwcol-2;i<=nwcol;i++){
         if(i >= 0 && i + 2 < W){
           if(board[nwrow][i]==board[nwrow][i+1]&&board[nwrow][i]==board[nwrow][i+2]){
@@ -284,8 +283,9 @@ int isMatching(int board[6][6], int row, int col) {
     }
     swap(board,nwrow,nwcol,row,col);
     nwrow=row,nwcol=col+1;
-    swap(board,row,col,nwrow,nwcol);
+    
     if(board[nwrow][nwcol]!=' '&&(nwrow>=0 &&nwrow<H)&&(nwcol>=0 &&nwcol<W)){
+      swap(board,row,col,nwrow,nwcol);
       for (int i=nwcol-2;i<=nwcol;i++){
         if(i >= 0 && i + 2 < W){
           if(board[nwrow][i]==board[nwrow][i+1]&&board[nwrow][i]==board[nwrow][i+2]){
@@ -307,9 +307,9 @@ int isMatching(int board[6][6], int row, int col) {
     }
     swap(board,nwrow,nwcol,row,col);
     nwrow=row,nwcol=col-1;
-    swap(board,row,col,nwrow,nwcol);
     
     if(board[nwrow][nwcol]!=' '&&(nwrow>=0 &&nwrow<H)&&(nwcol>=0 &&nwcol<W)){
+      swap(board,row,col,nwrow,nwcol);
       for (int i=nwcol-2;i<=nwcol;i++){
         if(i >= 0 && i + 2 < W){
           if(board[nwrow][i]==board[nwrow][i+1]&&board[nwrow][i]==board[nwrow][i+2]){
