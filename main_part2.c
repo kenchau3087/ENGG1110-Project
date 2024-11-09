@@ -78,7 +78,32 @@ void initGameBoard(int board[H][W], int board_sample[][W]) {
  * @return The number of candies in the stack.
  */
 int initGameBoardFromFile(int board[][W], int stacks[]) {
-
+  FILE* fin=fopen("board.txt","r");
+  int r=0,c=0;
+  if(fin!=NULL){
+    if(fscanf(fin,"%d%d",&r,&c)){
+      for (int i=0;i<r;i++){
+        for (int j=0;j<c;j++){
+          int temp=0;
+          fscanf(fin,"%d",&temp);
+          board[i][j]=candies[temp];
+        }
+      }
+    int numCandies=0;
+    fscanf(fin,"%d",&numCandies);
+    for (int i=0;i<numCandies;i++){
+      fscanf(fin,"%d",&stacks[i]);
+    }
+    return numCandies;
+    }
+    else {
+      printf("Failed to read text\n");
+    }
+  }
+  else {
+    printf("Failed to open board.txt!\n");
+    exit(1);
+  }
 }
 
 /**
@@ -338,7 +363,14 @@ int isMatching(int board[6][6], int row, int col) {
  * @param board The game board the game is using
  */
 void applyGravity(int board[][6]) {
-
+  for (int j=0;j<W;j++){
+    for(int i=0;i<H;i++){
+      if(board[i][j]==' ')
+        for (int k=i;k>0;k--){
+          swap(board,k,j,k-1,j);
+        }
+    }
+  }
 }
 
 /**
@@ -355,9 +387,24 @@ void applyGravity(int board[][6]) {
  * available candy
  */
 int fillEmpty(int board[][W], int stacks[], int current, int numCandies) {
-   
+  for (int j=0;j<W;j++){
+    if(board[0][j]==' '){
+      if(current==numCandies){
+        printf("No more candies available.");
+        exit(1);
+      }
+      else{
+        for(int i=W-1;i>=0;i--){
+          if(board[i][j]==' '){
+            board[i][j]=candies[stacks[current++]];
+            printf("%d",current);
+          }
+        }
+      }
+    }
+  }
+  return current;
 }
-
 /**
  * [Part II]
  * main() function will call this
@@ -430,22 +477,27 @@ int main(void) {
 
   // printf("Game Over! No more possible moves.\n");
 
-// Hope you enjoy the game : )
-  initGameBoard(board,board_sample);
+// Hope you enjoy the game : ) 
+  //initGameBoard(board,board_sample);
+  numCandies= initGameBoardFromFile(board,stacks);
   while(1){
-    printf("=====\nNew Round:\n");
-    printGameBoard(board);
-    if (askForSwap(board)){
+      printf("=====\nNew Round:\n");
       printGameBoard(board);
+      if (askForSwap(board)){
+        printGameBoard(board);
+      }
+      else {
+        printf("Please try again.\n");
+      }
+      applyGravity(board);
+      current=fillEmpty(board,stacks,current,numCandies);
+      printGameBoard(board);
+      if(isGameOver(board)){
+        printf("Game Over! No more possible moves.\n");
+        break;
+      }
     }
-    else {
-      printf("Please try again.\n");
-    }
-    if(isGameOver(board)){
-      printf("Game Over! No more possible moves.\n");
-      break;
-    }
-  }
- return 0;
+  
+  return 0;
 
 }
