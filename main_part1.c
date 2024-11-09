@@ -217,7 +217,6 @@ int isGameOver(int board[][W]) {
   for (int i=0;i<H;i++){
     for (int j=0;j<W;j++){
       if(isMatching(board,i,j)){
-        
         return 0;
       }
     }
@@ -242,8 +241,7 @@ int isMatching(int board[6][6], int row, int col) {
       for (int i=nwcol-2;i<=nwcol;i++){
         if(i >= 0 && i + 2 < W){
           if(board[nwrow][i]==board[nwrow][i+1]&&board[nwrow][i]==board[nwrow][i+2]){
-              
-              swap(board,nwrow,nwcol,row,col);
+              swap(board,row,col,nwrow,nwcol);
               return 1;
             }
           }
@@ -251,22 +249,21 @@ int isMatching(int board[6][6], int row, int col) {
       for (int i=nwrow-2;i<=nwrow;i++){
         if(i >= 0 && i + 2 < H){
           if(board[i][nwcol]==board[i+1][nwcol]&&board[i][nwcol]==board[i+2][nwcol]){
-            
-            swap(board,nwrow,nwcol,row,col);
+            swap(board,row,col,nwrow,nwcol);
             return 1;
           }
         }
       }
+      swap(board,row,col,nwrow,nwcol);
     }
-    swap(board,nwrow,nwcol,row,col);
+    
     nwrow=row-1,nwcol=col;
     if(board[nwrow][nwcol]!=' '&&(nwrow>=0 &&nwrow<H)&&(nwcol>=0 &&nwcol<W)){
       swap(board,row,col,nwrow,nwcol);
       for (int i=nwcol-2;i<=nwcol;i++){
         if(i >= 0 && i + 2 < W){
           if(board[nwrow][i]==board[nwrow][i+1]&&board[nwrow][i]==board[nwrow][i+2]){
-              
-              swap(board,nwrow,nwcol,row,col);
+              swap(board,row,col,nwrow,nwcol);
               return 1;
             }
           }
@@ -274,16 +271,14 @@ int isMatching(int board[6][6], int row, int col) {
       for (int i=nwrow-2;i<=nwrow;i++){
         if(i >= 0 && i + 2 < H){
           if(board[i][nwcol]==board[i+1][nwcol]&&board[i][nwcol]==board[i+2][nwcol]){
-            
-            swap(board,nwrow,nwcol,row,col);
+            swap(board,row,col,nwrow,nwcol);
             return 1;
           }
         }
       }
+      swap(board,row,col,nwrow,nwcol);
     }
-    swap(board,nwrow,nwcol,row,col);
     nwrow=row,nwcol=col+1;
-    
     if(board[nwrow][nwcol]!=' '&&(nwrow>=0 &&nwrow<H)&&(nwcol>=0 &&nwcol<W)){
       swap(board,row,col,nwrow,nwcol);
       for (int i=nwcol-2;i<=nwcol;i++){
@@ -304,8 +299,8 @@ int isMatching(int board[6][6], int row, int col) {
           }
         }
       }
+      swap(board,row,col,nwrow,nwcol);
     }
-    swap(board,nwrow,nwcol,row,col);
     nwrow=row,nwcol=col-1;
     
     if(board[nwrow][nwcol]!=' '&&(nwrow>=0 &&nwrow<H)&&(nwcol>=0 &&nwcol<W)){
@@ -328,8 +323,8 @@ int isMatching(int board[6][6], int row, int col) {
           }
         }
       }
+      swap(board,row,col,nwrow,nwcol);
     }
-    swap(board,nwrow,nwcol,row,col);
   }
   return 0;
 }
