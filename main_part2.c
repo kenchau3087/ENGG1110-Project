@@ -371,6 +371,7 @@ void applyGravity(int board[][6]) {
         }
     }
   }
+  printGameBoard(board);
 }
 
 /**
@@ -397,12 +398,12 @@ int fillEmpty(int board[][W], int stacks[], int current, int numCandies) {
         for(int i=W-1;i>=0;i--){
           if(board[i][j]==' '){
             board[i][j]=candies[stacks[current++]];
-            printf("%d",current);
           }
         }
       }
     }
   }
+  printGameBoard(board);
   return current;
 }
 /**
@@ -424,7 +425,15 @@ int fillEmpty(int board[][W], int stacks[], int current, int numCandies) {
  * available candy
  */
 int cascade(int board[][6], int stacks[], int current, int numCandies) {
-
+  for (int i=0;i<H;i++){
+    for(int j=0;j<W;j++){
+      if(findAndRemoveMatch(board,i,j)){
+        applyGravity(board);
+        current=fillEmpty(board,stacks,current,numCandies);
+      }
+    }
+  }
+  
 }
 /* Main Function */
 /**
@@ -485,13 +494,11 @@ int main(void) {
       printGameBoard(board);
       if (askForSwap(board)){
         printGameBoard(board);
+        cascade(board,stacks,current,numCandies);
       }
       else {
         printf("Please try again.\n");
       }
-      applyGravity(board);
-      current=fillEmpty(board,stacks,current,numCandies);
-      printGameBoard(board);
       if(isGameOver(board)){
         printf("Game Over! No more possible moves.\n");
         break;
