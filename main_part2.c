@@ -425,9 +425,12 @@ int fillEmpty(int board[][W], int stacks[], int current, int numCandies) {
  * available candy
  */
 int cascade(int board[][6], int stacks[], int current, int numCandies) {
+  applyGravity(board);
+  current=fillEmpty(board,stacks,current,numCandies);
   for (int i=0;i<H;i++){
     for(int j=0;j<W;j++){
       if(findAndRemoveMatch(board,i,j)){
+        printf("Cascade Matches found!");
         applyGravity(board);
         current=fillEmpty(board,stacks,current,numCandies);
       }
