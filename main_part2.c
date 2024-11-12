@@ -104,6 +104,7 @@ int initGameBoardFromFile(int board[][W], int stacks[]) {
     printf("Failed to open board.txt!\n");
     exit(1);
   }
+  return 1;
 }
 
 /**
@@ -431,12 +432,14 @@ int cascade(int board[][6], int stacks[], int current, int numCandies) {
     for(int j=0;j<W;j++){
       if(findAndRemoveMatch(board,i,j)){
         printf("Cascade Matches found!");
+        printGameBoard(board);
         applyGravity(board);
         current=fillEmpty(board,stacks,current,numCandies);
+        
       }
     }
   }
-  
+  return current;
 }
 /* Main Function */
 /**
