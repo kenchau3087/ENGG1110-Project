@@ -88,9 +88,9 @@ int initGameBoardFromFile(int board[][W], int stacks[]) {
  */
 void printGameBoard(int board[][W]) {
   printf("=====\n");
-  printf(" | 0 | 1 | 2 | 3 | 4 | 5 |\n");
+  printf("  | 0 | 1 | 2 | 3 | 4 | 5 |\n");
   for(int i=0;i<H ;i++){
-    printf("%d",i);
+    printf(" %d",i);
     for (int j=0;j<W;j++){
       printf("| %c ",board[i][j]);
     }
@@ -114,12 +114,19 @@ int askForSwap(int board[][W]) {
   while (getchar() != '\n');
   if(x<0 || y<0||y>=H||x>=W){
     printf("Coordinates Out of Bound.\n");
+    printf("Please try again.\n");
+    return 0;
+  }
+  if(board[y][x]==' '){
+    printf("Empty Cell Selected.\n");
+    printf("Please try again.\n");
     return 0;
   }
   printf("Enter the direction to swap (U for Up, D for Down, L for Left, R for Right):");
   scanf(" %c",&dir);
   if (dir!='U'&&dir!='D'&&dir!='L'&&dir!='R'){
     printf("Wrong Direction Input.\n");
+    
     return 0;
   }
   int newx=x,newy=y;
@@ -137,17 +144,19 @@ int askForSwap(int board[][W]) {
   }
   if(dir=='U'&&(newy)<0||dir=='D'&&(newy)>=H||dir=='L'&&(newx)<0||dir=='R'&&(newx)>=W){
     printf("Move Out of Bound.\n");
+    printf("Please try again.\n");
     return 0;
   }
   if(board[newy][newx]==' '){
     printf("Empty Cell Selected.\n");
+    printf("Please try again.\n");
     return 0;
   }
   swap(board,y,x,newy,newx);
   if (!(findAndRemoveMatch(board,y,x)||findAndRemoveMatch(board,newy,newx))){
-    swap(board,newy,newx,y,x);
     printGameBoard(board);
-    printf("No Match Found\n");
+    swap(board,newy,newx,y,x);
+    printf("No Match found!\n");
     return 0;
   }
   return 1;
@@ -437,9 +446,6 @@ int main(void) {
     printGameBoard(board);
     if (askForSwap(board)){
       printGameBoard(board);
-    }
-    else {
-      printf("Please try again.\n");
     }
     if(isGameOver(board)){
       printf("Game Over! No more possible moves.\n");
