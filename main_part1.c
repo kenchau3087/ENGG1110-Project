@@ -190,6 +190,9 @@ void swap(int board[][6], int row1, int col1, int row2, int col2) {
  * @return 1 if there is a match in the board, 0 if there is not.
  */
 int findAndRemoveMatch(int board[][W], int row, int col){
+  if(board[row][col]==' ') return 0;
+  int found=0;
+  int temp =board[row][col];
   for (int i=col-2;i<=col;i++){
     if(i >= 0 && i + 2 < W){
       if(board[row][i]==board[row][i+1]&&board[row][i]==board[row][i+2]){
@@ -197,10 +200,11 @@ int findAndRemoveMatch(int board[][W], int row, int col){
           board[row][i]=' ';
           board[row][i+1]=' ';
           board[row][i+2]=' ';
-          return 1;
+          found=1;
         }
       }
   }
+  board[row][col]=temp;
   for (int i=row-2;i<=row;i++){
     if(i >= 0 && i + 2 < H){
       if(board[i][col]==board[i+1][col]&&board[i][col]==board[i+2][col]){
@@ -208,11 +212,16 @@ int findAndRemoveMatch(int board[][W], int row, int col){
         board[i][col]=' ';
         board[i+1][col]=' ';
         board[i+2][col]=' ';
-        return 1;
+        found=1;
       }
     }
   }
-    return 0;
+  if(found==1){
+    board[row][col]=' ';
+    return 1;
+  }
+  else return 0;
+  
 }
 /**
  * Main() function will call this.

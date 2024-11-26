@@ -87,12 +87,16 @@ int initGameBoardFromFile(int board[][W], int stacks[]) {
           int temp=0;
           fscanf(fin,"%d",&temp);
           board[i][j]=candies[temp];
+          //printf("%d ",temp);
         }
+        //printf("\n");
       }
     int numCandies=0;
-    fscanf(fin,"%d",&numCandies);
+    fscanf(fin,"%d\n",&numCandies);
+    //printf("%d ",numCandies);
     for (int i=0;i<numCandies;i++){
       fscanf(fin,"%d",&stacks[i]);
+      //printf("%c ",candies[stacks[i]]);
     }
     return numCandies;
     }
@@ -101,7 +105,7 @@ int initGameBoardFromFile(int board[][W], int stacks[]) {
     }
   }
   else {
-    printf("Failed to open the board.txt!\n");
+    printf("Failed to open board.txt!\n");
     exit(1);
   }
   return 1;
@@ -216,17 +220,23 @@ void swap(int board[][6], int row1, int col1, int row2, int col2) {
  * @return 1 if there is a match in the board, 0 if there is not.
  */
 int findAndRemoveMatch(int board[][W], int row, int col){
-  for (int i=col-2;i<=col;i++){
-    if(i >= 0 && i + 2 < W){
+  if(board[row][col]==' ') return 0;
+  int found=0,len=0,start=0;;
+  int temp =board[row][col];
+  for (int i=0;i<W;)
+  for (int i=col-2;i+2<=W;i++){
+    if(i >= 0 ){
+      if (board[row][i]==board[row][col])start==
       if(board[row][i]==board[row][i+1]&&board[row][i]==board[row][i+2]){
           printf("Horizontal Match found at row %d!\n",row);
           board[row][i]=' ';
           board[row][i+1]=' ';
           board[row][i+2]=' ';
-          return 1;
+          found=1;
         }
       }
   }
+  board[row][col]=temp;
   for (int i=row-2;i<=row;i++){
     if(i >= 0 && i + 2 < H){
       if(board[i][col]==board[i+1][col]&&board[i][col]==board[i+2][col]){
@@ -234,11 +244,17 @@ int findAndRemoveMatch(int board[][W], int row, int col){
         board[i][col]=' ';
         board[i+1][col]=' ';
         board[i+2][col]=' ';
-        return 1;
+        found=1;
+       
       }
     }
   }
-    return 0;
+  if(found==1){
+    board[row][col]=' ';
+    return 1;
+  }
+  else return 0;
+  
 }
 /**
  * Main() function will call this.
@@ -408,6 +424,7 @@ int fillEmpty(int board[][W], int stacks[], int current, int numCandies) {
         for(int i=W-1;i>=0;i--){
           if(board[i][j]==' '){
             board[i][j]=candies[stacks[current++]];
+            //printf("%d",current);
           }
         }
       }
@@ -435,18 +452,20 @@ int fillEmpty(int board[][W], int stacks[], int current, int numCandies) {
  * available candy
  */
 int cascade(int board[][6], int stacks[], int current, int numCandies) {
-  applyGravity(board);
-  current=fillEmpty(board,stacks,current,numCandies);
+  int CascadeFound=0;
   for (int i=0;i<H;i++){
     for(int j=0;j<W;j++){
       if(findAndRemoveMatch(board,i,j)){
-        printf("Cascade Matches found!\n");
-        printGameBoard(board);
-        applyGravity(board);
-        current=fillEmpty(board,stacks,current,numCandies);
-        
+        CascadeFound++;
+        break;
       }
     }
+  }
+  if(CascadeFound){
+    printf("Cascade Matches found!\n");
+    applyGravity(board);
+    current=fillEmpty(board,stacks,current,numCandies);
+    current=cascade(board,stacks,current,numCandies);
   }
   return current;
 }
@@ -509,7 +528,9 @@ int main(void) {
       printGameBoard(board);
       if (askForSwap(board)){
         printGameBoard(board);
-        cascade(board,stacks,current,numCandies);
+        applyGravity(board);
+        current=fillEmpty(board,stacks,current,numCandies);
+        current=cascade(board,stacks,current,numCandies);
       }
       else {
         printf("Please try again.\n");
