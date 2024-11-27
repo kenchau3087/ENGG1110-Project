@@ -87,12 +87,16 @@ int initGameBoardFromFile(int board[][W], int stacks[]) {
           int temp=0;
           fscanf(fin,"%d",&temp);
           board[i][j]=candies[temp];
+          //printf("%d ",temp);
         }
+        //printf("\n");
       }
     int numCandies=0;
-    fscanf(fin,"%d",&numCandies);
+    fscanf(fin,"%d\n",&numCandies);
+    //printf("%d ",numCandies);
     for (int i=0;i<numCandies;i++){
       fscanf(fin,"%d",&stacks[i]);
+      //printf("%c ",candies[stacks[i]]);
     }
     return numCandies;
     }
@@ -101,10 +105,11 @@ int initGameBoardFromFile(int board[][W], int stacks[]) {
     }
   }
   else {
-    printf("Failed to open the board.txt!\n");
+    printf("Failed to open board.txt!\n");
     exit(1);
   }
   return 1;
+
 }
 
 /**
@@ -133,59 +138,60 @@ void printGameBoard(int board[][W]) {
  * 1 if swapping is successfully
  */
 int askForSwap(int board[][W]) {
-  int x=0,y=0;
-  char dir=' ';
-  printf("Enter the coordinate (row, column) of the candy:");
-  scanf("%d%d",&y,&x);
-  while (getchar() != '\n');
-  if(x<0 || y<0||y>=H||x>=W){
-    printf("Coordinates Out of Bound.\n");
+	int x=0,y=0;
+	char dir=' ';
+	printf("Enter the coordinate (row, column) of the candy:");
+	scanf("%d%d",&y,&x);
+	if(x<0 || y<0||y>=H||x>=W) {
+		printf("Coordinates Out of Bound.\n");
     printf("Please try again.\n");
-    return 0;
-  }
-  if(board[y][x]==' '){
-    printf("Empty Cell Selected.\n");
+		return 0;
+	}
+	if(board[y][x]==' ') {
+		printf("Empty Cell Selected.\n");
     printf("Please try again.\n");
-    return 0;
-  }
-  printf("Enter the direction to swap (U for Up, D for Down, L for Left, R for Right):");
-  scanf(" %c",&dir);
-  if (dir!='U'&&dir!='D'&&dir!='L'&&dir!='R'){
-    printf("Wrong Direction Input.\n");
-    
-    return 0;
-  }
-  int newx=x,newy=y;
-  if (dir=='U'){
-    newy--;
-  }
-  else if (dir=='D'){
-    newy++;
-  }
-  else if (dir=='L'){
-    newx--;
-  }
-  else if (dir=='R'){
-    newx++;
-  }
-  if(dir=='U'&&(newy)<0||dir=='D'&&(newy)>=H||dir=='L'&&(newx)<0||dir=='R'&&(newx)>=W){
-    printf("Move Out of Bound.\n");
+		return 0;
+	}
+	printf("Enter the direction to swap (U for Up, D for Down, L for Left, R for Right):");
+	scanf(" %c",&dir);
+	if (dir!='U'&&dir!='D'&&dir!='L'&&dir!='R') {
+		printf("Wrong Direction Input.\n");
     printf("Please try again.\n");
-    return 0;
-  }
-  if(board[newy][newx]==' '){
-    printf("Empty Cell Selected.\n");
+		return 0;
+	}
+	int newx=x,newy=y;
+	if (dir=='U') {
+		newy--;
+	}
+	else if (dir=='D') {
+		newy++;
+	}
+	else if (dir=='L') {
+		newx--;
+	}
+	else if (dir=='R') {
+		newx++;
+	}
+	if((newy)<0||(newy)>=H||(newx)<0||(newx)>=W){
+		printf("Move Out of Bound.\n");
     printf("Please try again.\n");
-    return 0;
-  }
-  swap(board,y,x,newy,newx);
-  if (!(findAndRemoveMatch(board,y,x)||findAndRemoveMatch(board,newy,newx))){
-    printGameBoard(board);
-    swap(board,newy,newx,y,x);
-    printf("No Match found!\n");
-    return 0;
-  }
-  return 1;
+		return 0;
+	}
+	if(board[newy][newx]==' ') {
+		printf("Empty Cell Selected.\n");
+    printf("Please try again.\n");
+		return 0;
+	}
+	swap(board,y,x,newy,newx);
+  int nx=findAndRemoveMatch(board,newy,newx);
+  int xxa=findAndRemoveMatch(board,y,x);
+	if (nx==0&&xxa==0) {
+		printGameBoard(board);
+		swap(board,newy,newx,y,x);
+		printf("No Match found!\n");
+		return 0;
+	}
+	return 1;
 }
 
 /**
@@ -199,9 +205,9 @@ int askForSwap(int board[][W]) {
  * @param col2 The column number of the destination cell
  */
 void swap(int board[][6], int row1, int col1, int row2, int col2) {
-    int temp= board[row1][col1];
-    board[row1][col1]=board[row2][col2];
-    board[row2][col2]=temp;
+	int temp= board[row1][col1];
+	board[row1][col1]=board[row2][col2];
+	board[row2][col2]=temp;
 }
 
 /**
@@ -215,30 +221,71 @@ void swap(int board[][6], int row1, int col1, int row2, int col2) {
  * @param col The column number of the given coordinate
  * @return 1 if there is a match in the board, 0 if there is not.
  */
-int findAndRemoveMatch(int board[][W], int row, int col){
-  for (int i=col-2;i<=col;i++){
-    if(i >= 0 && i + 2 < W){
-      if(board[row][i]==board[row][i+1]&&board[row][i]==board[row][i+2]){
-          printf("Horizontal Match found at row %d!\n",row);
-          board[row][i]=' ';
-          board[row][i+1]=' ';
-          board[row][i+2]=' ';
-          return 1;
-        }
-      }
-  }
-  for (int i=row-2;i<=row;i++){
-    if(i >= 0 && i + 2 < H){
-      if(board[i][col]==board[i+1][col]&&board[i][col]==board[i+2][col]){
-        printf("Vertical Match found at column %d!\n",col);
-        board[i][col]=' ';
-        board[i+1][col]=' ';
-        board[i+2][col]=' ';
-        return 1;
-      }
+int findAndRemoveMatch(int board[][W], int row, int col) {
+	int count =0,start =-1,Found=0;
+	int ori=board[row][col];
+	for (int i=0; i<W; i++) {
+		if(board[row][i]==ori) {
+			if(start==-1)start=i;
+			count++;
+		}
+		else if (count>=3&&start<=col&&start+count>col) {
+			break;
+		}
+    else if (i>col&&count<3){
+      start=-1;
+			count=0;
+      break;
     }
-  }
-    return 0;
+		else if (count<3&&i<=col) {
+			start=-1;
+			count=0;
+		}
+    
+	}
+	if(count>=3) {
+		printf("Horizontal Match found at row %d!\n",row);
+		Found=1;
+		for (int i=start; i<start+count; i++) {
+      //printf("%d,%d\n",row,i);
+			board[row][i]=' ';
+		}
+	}
+	board[row][col]=ori;
+	count =0,start =-1;
+	for (int i=0; i<H; i++) {
+		if(board[i][col]==ori) {
+			if(start==-1)start=i;
+			count++;
+		}
+		else if (count>=3&&start<=row&&start+count>row) {
+			break;
+		}
+    else if (i>row&&count<3){
+      start=-1;
+			count=0;
+      break;
+    }
+		else if (count<3&&i<=row) {
+			start=-1;
+			count=0;
+		}
+    
+	}
+	if(count>=3) {
+		printf("Vertical Match found at column %d!\n",col);
+		Found=1;
+		for (int i=start; i<start+count; i++) {
+      //printf("%d,%d\n",i,col);
+			board[i][col]=' ';
+		}
+	}
+	if(Found) {
+		board[row][col]=' ';
+    //printf("%d:%d,%d\n",Found,row,col);
+		return 1;
+	}
+	else return 0;
 }
 /**
  * Main() function will call this.
@@ -398,16 +445,20 @@ void applyGravity(int board[][6]) {
  * available candy
  */
 int fillEmpty(int board[][W], int stacks[], int current, int numCandies) {
-  for (int j=0;j<W;j++){
+    for (int j=0;j<W;j++){
     if(board[0][j]==' '){
       if(current==numCandies){
-        printf("No more candies available.");
+        printf("No more candies available.\n");
         exit(1);
       }
       else{
         for(int i=W-1;i>=0;i--){
           if(board[i][j]==' '){
             board[i][j]=candies[stacks[current++]];
+          }
+          if(current>numCandies){
+            printf("No more candies available.\n");
+            exit(-1);
           }
         }
       }
@@ -435,18 +486,22 @@ int fillEmpty(int board[][W], int stacks[], int current, int numCandies) {
  * available candy
  */
 int cascade(int board[][6], int stacks[], int current, int numCandies) {
-  applyGravity(board);
-  current=fillEmpty(board,stacks,current,numCandies);
+  int CascadeFound=0;
   for (int i=0;i<H;i++){
     for(int j=0;j<W;j++){
-      if(findAndRemoveMatch(board,i,j)){
-        printf("Cascade Matches found!\n");
-        printGameBoard(board);
-        applyGravity(board);
-        current=fillEmpty(board,stacks,current,numCandies);
-        
+      if(board[i][j]!=' '){
+        if(findAndRemoveMatch(board,i,j)){
+          CascadeFound++;
+        break;
       }
     }
+    }
+  }
+  if(CascadeFound){
+    printf("Cascade Matches found!\n");
+    applyGravity(board);
+    current=fillEmpty(board,stacks,current,numCandies);
+    current=cascade(board,stacks,current,numCandies);
   }
   return current;
 }
@@ -509,11 +564,10 @@ int main(void) {
       printGameBoard(board);
       if (askForSwap(board)){
         printGameBoard(board);
-        cascade(board,stacks,current,numCandies);
+        applyGravity(board);
+        current=fillEmpty(board,stacks,current,numCandies);
       }
-      else {
-        printf("Please try again.\n");
-      }
+      current=cascade(board,stacks,current,numCandies);
       if(isGameOver(board)){
         printf("Game Over! No more possible moves.\n");
         break;
