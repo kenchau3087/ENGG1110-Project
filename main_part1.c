@@ -60,11 +60,11 @@ int cascade(int board[][6], int stacks[], int current, int numCandies);
  * @param board_sample The given game board sample values
  */
 void initGameBoard(int board[H][W], int board_sample[][W]) {
-  for(int i=0;i<H ;i++){
-    for (int j=0;j<W;j++){
-      board[i][j]=candies[board_sample[i][j]];
-    }
-  }
+	for(int i=0; i<H ; i++) {
+		for (int j=0; j<W; j++) {
+			board[i][j]=candies[board_sample[i][j]];
+		}
+	}
 }
 
 /**
@@ -87,15 +87,15 @@ int initGameBoardFromFile(int board[][W], int stacks[]) {
  * @param board The game board the game is using
  */
 void printGameBoard(int board[][W]) {
-  printf("=====\n");
-  printf("  | 0 | 1 | 2 | 3 | 4 | 5 |\n");
-  for(int i=0;i<H ;i++){
-    printf(" %d",i);
-    for (int j=0;j<W;j++){
-      printf("| %c ",board[i][j]);
-    }
-    printf("|\n");
-  }
+	printf("=====\n");
+	printf("  | 0 | 1 | 2 | 3 | 4 | 5 |\n");
+	for(int i=0; i<H ; i++) {
+		printf(" %d",i);
+		for (int j=0; j<W; j++) {
+			printf("| %c ",board[i][j]);
+		}
+		printf("|\n");
+	}
 }
 
 /**
@@ -107,59 +107,59 @@ void printGameBoard(int board[][W]) {
  * 1 if swapping is successfully
  */
 int askForSwap(int board[][W]) {
-  int x=0,y=0;
-  char dir=' ';
-  printf("Enter the coordinate (row, column) of the candy:");
-  scanf("%d%d",&y,&x);
-  while (getchar() != '\n');
-  if(x<0 || y<0||y>=H||x>=W){
-    printf("Coordinates Out of Bound.\n");
+	int x=0,y=0;
+	char dir=' ';
+	printf("Enter the coordinate (row, column) of the candy:");
+	scanf("%d%d",&y,&x);
+	while (getchar() != '\n');
+	if(x<0 || y<0||y>=H||x>=W) {
+		printf("Coordinates Out of Bound.\n");
     printf("Please try again.\n");
-    return 0;
-  }
-  if(board[y][x]==' '){
-    printf("Empty Cell Selected.\n");
+		return 0;
+	}
+	if(board[y][x]==' ') {
+		printf("Empty Cell Selected.\n");
     printf("Please try again.\n");
-    return 0;
-  }
-  printf("Enter the direction to swap (U for Up, D for Down, L for Left, R for Right):");
-  scanf(" %c",&dir);
-  if (dir!='U'&&dir!='D'&&dir!='L'&&dir!='R'){
-    printf("Wrong Direction Input.\n");
-    
-    return 0;
-  }
-  int newx=x,newy=y;
-  if (dir=='U'){
-    newy--;
-  }
-  else if (dir=='D'){
-    newy++;
-  }
-  else if (dir=='L'){
-    newx--;
-  }
-  else if (dir=='R'){
-    newx++;
-  }
-  if(dir=='U'&&(newy)<0||dir=='D'&&(newy)>=H||dir=='L'&&(newx)<0||dir=='R'&&(newx)>=W){
-    printf("Move Out of Bound.\n");
+		return 0;
+	}
+	printf("Enter the direction to swap (U for Up, D for Down, L for Left, R for Right):");
+	scanf(" %c",&dir);
+	if (dir!='U'&&dir!='D'&&dir!='L'&&dir!='R') {
+		printf("Wrong Direction Input.\n");
     printf("Please try again.\n");
-    return 0;
-  }
-  if(board[newy][newx]==' '){
-    printf("Empty Cell Selected.\n");
+		return 0;
+	}
+	int newx=x,newy=y;
+	if (dir=='U') {
+		newy--;
+	}
+	else if (dir=='D') {
+		newy++;
+	}
+	else if (dir=='L') {
+		newx--;
+	}
+	else if (dir=='R') {
+		newx++;
+	}
+	if(dir=='U'&&(newy)<0||dir=='D'&&(newy)>=H||dir=='L'&&(newx)<0||dir=='R'&&(newx)>=W) {
+		printf("Move Out of Bound.\n");
     printf("Please try again.\n");
-    return 0;
-  }
-  swap(board,y,x,newy,newx);
-  if (!(findAndRemoveMatch(board,y,x)||findAndRemoveMatch(board,newy,newx))){
-    printGameBoard(board);
-    swap(board,newy,newx,y,x);
-    printf("No Match found!\n");
-    return 0;
-  }
-  return 1;
+		return 0;
+	}
+	if(board[newy][newx]==' ') {
+		printf("Empty Cell Selected.\n");
+    printf("Please try again.\n");
+		return 0;
+	}
+	swap(board,y,x,newy,newx);
+	if (!(findAndRemoveMatch(board,y,x)||findAndRemoveMatch(board,newy,newx))) {
+		printGameBoard(board);
+		swap(board,newy,newx,y,x);
+		printf("No Match found!\n");
+		return 0;
+	}
+	return 1;
 }
 
 /**
@@ -173,9 +173,9 @@ int askForSwap(int board[][W]) {
  * @param col2 The column number of the destination cell
  */
 void swap(int board[][6], int row1, int col1, int row2, int col2) {
-    int temp= board[row1][col1];
-    board[row1][col1]=board[row2][col2];
-    board[row2][col2]=temp;
+	int temp= board[row1][col1];
+	board[row1][col1]=board[row2][col2];
+	board[row2][col2]=temp;
 }
 
 /**
@@ -189,30 +189,56 @@ void swap(int board[][6], int row1, int col1, int row2, int col2) {
  * @param col The column number of the given coordinate
  * @return 1 if there is a match in the board, 0 if there is not.
  */
-int findAndRemoveMatch(int board[][W], int row, int col){
-  for (int i=col-2;i<=col;i++){
-    if(i >= 0 && i + 2 < W){
-      if(board[row][i]==board[row][i+1]&&board[row][i]==board[row][i+2]){
-          printf("Horizontal Match found at row %d!\n",row);
-          board[row][i]=' ';
-          board[row][i+1]=' ';
-          board[row][i+2]=' ';
-          return 1;
-        }
-      }
-  }
-  for (int i=row-2;i<=row;i++){
-    if(i >= 0 && i + 2 < H){
-      if(board[i][col]==board[i+1][col]&&board[i][col]==board[i+2][col]){
-        printf("Vertical Match found at column %d!\n",col);
-        board[i][col]=' ';
-        board[i+1][col]=' ';
-        board[i+2][col]=' ';
-        return 1;
-      }
-    }
-  }
-    return 0;
+int findAndRemoveMatch(int board[][W], int row, int col) {
+	int count =0,start =-1,Found=0;
+	int ori=board[row][col];
+	for (int i=0; i<W; i++) {
+		if(board[row][i]==ori) {
+			if(start==-1)start=i;
+			count++;
+		}
+		else if (count>=3&&start<=col&&start+count>col) {
+			break;
+		}
+		else if (count<3||start>col||start+count<=col) {
+			start=-1;
+			count=0;
+		}
+	}
+	if(count>=3) {
+		printf("Horizontal Match found at row %d!\n",row);
+		Found=1;
+		for (int i=start; i<start+count; i++) {
+			board[row][i]=' ';
+		}
+	}
+	board[row][col]=ori;
+	count =0,start =-1;
+	for (int i=0; i<H; i++) {
+		if(board[i][col]==ori) {
+			if(start==-1)start=i;
+			count++;
+		}
+		else if (count>=3&&start<=row&&start+count>row) {
+			break;
+		}
+		else if (count<3||start>row||start+count<=row) {
+			start=-1;
+			count=0;
+		}
+	}
+	if(count>=3) {
+		printf("Vertical Match found at column %d!\n",col);
+		Found=1;
+		for (int i=start; i<start+count; i++) {
+			board[i][col]=' ';
+		}
+	}
+	if(Found) {
+		board[row][col]=' ';
+		return 1;
+	}
+	else return 0;
 }
 /**
  * Main() function will call this.
@@ -223,14 +249,14 @@ int findAndRemoveMatch(int board[][W], int row, int col){
  * @return 1 if it is game over; 0 if it isn't .
  */
 int isGameOver(int board[][W]) {
-  for (int i=0;i<H;i++){
-    for (int j=0;j<W;j++){
-      if(isMatching(board,i,j)){
-        return 0;
-      }
-    }
-  }
-  return 1;
+	for (int i=0; i<H; i++) {
+		for (int j=0; j<W; j++) {
+			if(isMatching(board,i,j)) {
+				return 0;
+			}
+		}
+	}
+	return 1;
 }
 
 /**
@@ -243,99 +269,99 @@ int isGameOver(int board[][W]) {
  * @return 1 if there is at least 1 match in any direction; 0 if there is not.
  */
 int isMatching(int board[6][6], int row, int col) {
-  if(board[row][col]!=' '){
-    int nwrow=row+1,nwcol=col;
-    if(board[nwrow][nwcol]!=' '&&(nwrow>=0 &&nwrow<H)&&(nwcol>=0 &&nwcol<W)){
-      swap(board,row,col,nwrow,nwcol);
-      for (int i=nwcol-2;i<=nwcol;i++){
-        if(i >= 0 && i + 2 < W){
-          if(board[nwrow][i]==board[nwrow][i+1]&&board[nwrow][i]==board[nwrow][i+2]){
-              swap(board,row,col,nwrow,nwcol);
-              return 1;
-            }
-          }
-      }
-      for (int i=nwrow-2;i<=nwrow;i++){
-        if(i >= 0 && i + 2 < H){
-          if(board[i][nwcol]==board[i+1][nwcol]&&board[i][nwcol]==board[i+2][nwcol]){
-            swap(board,row,col,nwrow,nwcol);
-            return 1;
-          }
-        }
-      }
-      swap(board,row,col,nwrow,nwcol);
-    }
-    
-    nwrow=row-1,nwcol=col;
-    if(board[nwrow][nwcol]!=' '&&(nwrow>=0 &&nwrow<H)&&(nwcol>=0 &&nwcol<W)){
-      swap(board,row,col,nwrow,nwcol);
-      for (int i=nwcol-2;i<=nwcol;i++){
-        if(i >= 0 && i + 2 < W){
-          if(board[nwrow][i]==board[nwrow][i+1]&&board[nwrow][i]==board[nwrow][i+2]){
-              swap(board,row,col,nwrow,nwcol);
-              return 1;
-            }
-          }
-      }
-      for (int i=nwrow-2;i<=nwrow;i++){
-        if(i >= 0 && i + 2 < H){
-          if(board[i][nwcol]==board[i+1][nwcol]&&board[i][nwcol]==board[i+2][nwcol]){
-            swap(board,row,col,nwrow,nwcol);
-            return 1;
-          }
-        }
-      }
-      swap(board,row,col,nwrow,nwcol);
-    }
-    nwrow=row,nwcol=col+1;
-    if(board[nwrow][nwcol]!=' '&&(nwrow>=0 &&nwrow<H)&&(nwcol>=0 &&nwcol<W)){
-      swap(board,row,col,nwrow,nwcol);
-      for (int i=nwcol-2;i<=nwcol;i++){
-        if(i >= 0 && i + 2 < W){
-          if(board[nwrow][i]==board[nwrow][i+1]&&board[nwrow][i]==board[nwrow][i+2]){
-              
-              swap(board,nwrow,nwcol,row,col);
-              return 1;
-            }
-          }
-      }
-      for (int i=nwrow-2;i<=nwrow;i++){
-        if(i >= 0 && i + 2 < H){
-          if(board[i][nwcol]==board[i+1][nwcol]&&board[i][nwcol]==board[i+2][nwcol]){
-            
-            swap(board,nwrow,nwcol,row,col);
-            return 1;
-          }
-        }
-      }
-      swap(board,row,col,nwrow,nwcol);
-    }
-    nwrow=row,nwcol=col-1;
-    
-    if(board[nwrow][nwcol]!=' '&&(nwrow>=0 &&nwrow<H)&&(nwcol>=0 &&nwcol<W)){
-      swap(board,row,col,nwrow,nwcol);
-      for (int i=nwcol-2;i<=nwcol;i++){
-        if(i >= 0 && i + 2 < W){
-          if(board[nwrow][i]==board[nwrow][i+1]&&board[nwrow][i]==board[nwrow][i+2]){
-          
-              swap(board,nwrow,nwcol,row,col); 
-              return 1;
-            }
-          }
-      }
-      for (int i=nwrow-2;i<=nwrow;i++){
-        if(i >= 0 && i + 2 < H){
-          if(board[i][nwcol]==board[i+1][nwcol]&&board[i][nwcol]==board[i+2][nwcol]){
-            
-            swap(board,nwrow,nwcol,row,col);
-            return 1;
-          }
-        }
-      }
-      swap(board,row,col,nwrow,nwcol);
-    }
-  }
-  return 0;
+	if(board[row][col]!=' ') {
+		int nwrow=row+1,nwcol=col;
+		if(board[nwrow][nwcol]!=' '&&(nwrow>=0 &&nwrow<H)&&(nwcol>=0 &&nwcol<W)) {
+			swap(board,row,col,nwrow,nwcol);
+			for (int i=nwcol-2; i<=nwcol; i++) {
+				if(i >= 0 && i + 2 < W) {
+					if(board[nwrow][i]==board[nwrow][i+1]&&board[nwrow][i]==board[nwrow][i+2]) {
+						swap(board,row,col,nwrow,nwcol);
+						return 1;
+					}
+				}
+			}
+			for (int i=nwrow-2; i<=nwrow; i++) {
+				if(i >= 0 && i + 2 < H) {
+					if(board[i][nwcol]==board[i+1][nwcol]&&board[i][nwcol]==board[i+2][nwcol]) {
+						swap(board,row,col,nwrow,nwcol);
+						return 1;
+					}
+				}
+			}
+			swap(board,row,col,nwrow,nwcol);
+		}
+
+		nwrow=row-1,nwcol=col;
+		if(board[nwrow][nwcol]!=' '&&(nwrow>=0 &&nwrow<H)&&(nwcol>=0 &&nwcol<W)) {
+			swap(board,row,col,nwrow,nwcol);
+			for (int i=nwcol-2; i<=nwcol; i++) {
+				if(i >= 0 && i + 2 < W) {
+					if(board[nwrow][i]==board[nwrow][i+1]&&board[nwrow][i]==board[nwrow][i+2]) {
+						swap(board,row,col,nwrow,nwcol);
+						return 1;
+					}
+				}
+			}
+			for (int i=nwrow-2; i<=nwrow; i++) {
+				if(i >= 0 && i + 2 < H) {
+					if(board[i][nwcol]==board[i+1][nwcol]&&board[i][nwcol]==board[i+2][nwcol]) {
+						swap(board,row,col,nwrow,nwcol);
+						return 1;
+					}
+				}
+			}
+			swap(board,row,col,nwrow,nwcol);
+		}
+		nwrow=row,nwcol=col+1;
+		if(board[nwrow][nwcol]!=' '&&(nwrow>=0 &&nwrow<H)&&(nwcol>=0 &&nwcol<W)) {
+			swap(board,row,col,nwrow,nwcol);
+			for (int i=nwcol-2; i<=nwcol; i++) {
+				if(i >= 0 && i + 2 < W) {
+					if(board[nwrow][i]==board[nwrow][i+1]&&board[nwrow][i]==board[nwrow][i+2]) {
+
+						swap(board,nwrow,nwcol,row,col);
+						return 1;
+					}
+				}
+			}
+			for (int i=nwrow-2; i<=nwrow; i++) {
+				if(i >= 0 && i + 2 < H) {
+					if(board[i][nwcol]==board[i+1][nwcol]&&board[i][nwcol]==board[i+2][nwcol]) {
+
+						swap(board,nwrow,nwcol,row,col);
+						return 1;
+					}
+				}
+			}
+			swap(board,row,col,nwrow,nwcol);
+		}
+		nwrow=row,nwcol=col-1;
+
+		if(board[nwrow][nwcol]!=' '&&(nwrow>=0 &&nwrow<H)&&(nwcol>=0 &&nwcol<W)) {
+			swap(board,row,col,nwrow,nwcol);
+			for (int i=nwcol-2; i<=nwcol; i++) {
+				if(i >= 0 && i + 2 < W) {
+					if(board[nwrow][i]==board[nwrow][i+1]&&board[nwrow][i]==board[nwrow][i+2]) {
+
+						swap(board,nwrow,nwcol,row,col);
+						return 1;
+					}
+				}
+			}
+			for (int i=nwrow-2; i<=nwrow; i++) {
+				if(i >= 0 && i + 2 < H) {
+					if(board[i][nwcol]==board[i+1][nwcol]&&board[i][nwcol]==board[i+2][nwcol]) {
+
+						swap(board,nwrow,nwcol,row,col);
+						return 1;
+					}
+				}
+			}
+			swap(board,row,col,nwrow,nwcol);
+		}
+	}
+	return 0;
 }
 
 /**
@@ -364,7 +390,7 @@ void applyGravity(int board[][6]) {
  * available candy
  */
 int fillEmpty(int board[][W], int stacks[], int current, int numCandies) {
-   
+
 }
 
 /**
@@ -400,58 +426,58 @@ int cascade(int board[][6], int stacks[], int current, int numCandies) {
  * @return 0
  */
 int main(void) {
- // This is the variable holding a sample board value
- int board_sample[6][6] = {
-  {1,3,2,0,1,0},
-  {2,2,0,1,1,3},
-  {1,3,3,2,3,0},
-  {3,0,2,1,0,2},
-  {1,0,2,3,3,2},
-  {3,2,1,0,3,3}
- };
+// This is the variable holding a sample board value
+	int board_sample[6][6] = {
+		{1,3,2,0,1,0},
+		{2,2,0,1,1,3},
+		{1,3,3,2,3,0},
+		{3,0,2,1,0,2},
+		{1,0,2,3,3,2},
+		{3,2,1,0,3,3}
+	};
 
- int board[H][W] = {0}; // The game board, initialized to 0
- int stacks[100] = {0}; // Stacks array containing candy, Maximum capacity 100
- int numCandies = 0; // Number of candies in the stacks
- int current = 0; // the counter pointing to the next available candy
+	int board[H][W] = {0}; // The game board, initialized to 0
+	int stacks[100] = {0}; // Stacks array containing candy, Maximum capacity 100
+	int numCandies = 0; // Number of candies in the stacks
+	int current = 0; // the counter pointing to the next available candy
 // You may declare more variables if needed.
 
- // 1. First, you may initialize the board first
- // For part 1, you may use initGameBoard() while for part 2, initGameBoardFromFile()
-  
-  // printf for your reference
-  //printf("=====\n");
-  //printf("New Round:\n");
+// 1. First, you may initialize the board first
+// For part 1, you may use initGameBoard() while for part 2, initGameBoardFromFile()
 
- // Print the board using printGameBoard()
+	// printf for your reference
+	//printf("=====\n");
+	//printf("New Round:\n");
 
-  // Call askForSwap() to ask which candy to swap and perform swapping if successful.
-  // If not, print error message, shown for your reference
+// Print the board using printGameBoard()
 
-  // printf("Please try again.\n");
+	// Call askForSwap() to ask which candy to swap and perform swapping if successful.
+	// If not, print error message, shown for your reference
 
-  // Otherwise, continue the game logic by applying gravity and filling empty cells
-  // For part II, you may replace the above two to cascade(), as cascade() will be
-  // responsible to call at that moment.
+	// printf("Please try again.\n");
 
- // Check if it is a game over status. If yes, print the message and break the loop
- // printf is left for your reference.
+	// Otherwise, continue the game logic by applying gravity and filling empty cells
+	// For part II, you may replace the above two to cascade(), as cascade() will be
+	// responsible to call at that moment.
 
-  // printf("Game Over! No more possible moves.\n");
+// Check if it is a game over status. If yes, print the message and break the loop
+// printf is left for your reference.
+
+	// printf("Game Over! No more possible moves.\n");
 
 // Hope you enjoy the game : )
-  initGameBoard(board,board_sample);
-  while(1){
-    printf("=====\nNew Round:\n");
-    printGameBoard(board);
-    if (askForSwap(board)){
-      printGameBoard(board);
-    }
-    if(isGameOver(board)){
-      printf("Game Over! No more possible moves.\n");
-      break;
-    }
-  }
- return 0;
+	initGameBoard(board,board_sample);
+	while(1) {
+		printf("=====\nNew Round:\n");
+		printGameBoard(board);
+		if (askForSwap(board)) {
+			printGameBoard(board);
+		}
+		if(isGameOver(board)) {
+			printf("Game Over! No more possible moves.\n");
+			break;
+		}
+	}
+	return 0;
 
 }
